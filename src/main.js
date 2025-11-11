@@ -23,6 +23,42 @@ const initEventListeners = () => {
       router.push(href);
     }
   });
+  document.body.addEventListener("change", (e) => {
+    // limit 변경
+    if (e.target.id === "limit-select") {
+      const limit = e.target.value;
+      const currentParams = router.getQueryParams();
+      router.pushWithQuery("/", {
+        ...currentParams,
+        limit,
+        current: 1,
+      });
+    }
+
+    // sort 변경
+    if (e.target.id === "sort-select") {
+      const sort = e.target.value;
+      const currentParams = router.getQueryParams();
+      router.pushWithQuery("/", {
+        ...currentParams,
+        sort,
+        current: 1,
+      });
+    }
+  });
+
+  // 검색어 입력 (엔터키)
+  document.body.addEventListener("keypress", (e) => {
+    if (e.target.id === "search-input" && e.key === "Enter") {
+      const search = e.target.value;
+      const currentParams = router.getQueryParams();
+      router.pushWithQuery("/", {
+        ...currentParams,
+        search,
+        page: 1,
+      });
+    }
+  });
 };
 
 const main = () => {

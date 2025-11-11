@@ -1,9 +1,11 @@
-import { ProductList } from "../components/ProductList";
-import { SearchForm } from "../components/SearchForm";
+import { SearchForm } from "../components/SearchForm.js";
+import { ProductList } from "../components/ProductList.js";
 
-export const HomePage = ({ filters, pagination, products, loading }) => {
-  return `
-     ${SearchForm({ filters, pagination })}
-     ${ProductList({ loading, products })}
-    `;
+export const HomePage = ({ products, loading, pagination, filters }) => {
+  return /* html */ `
+    <div>
+      ${SearchForm({ filters, pagination })}
+      ${ProductList({ loading, products })}
+    </div>
+  `;
 };

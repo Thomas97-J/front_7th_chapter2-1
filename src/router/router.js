@@ -7,9 +7,12 @@ export const createRouter = () => {
 
   // 라우트 매칭
   const matchRoute = (pathname) => {
+    // 쿼리 파라미터 제거 (pathname만 사용)
+    const cleanPathname = pathname.split("?")[0];
+
     // 정확히 일치하는 라우트
-    if (routes.has(pathname)) {
-      return { handler: routes.get(pathname), params: {} };
+    if (routes.has(cleanPathname)) {
+      return { handler: routes.get(cleanPathname), params: {} };
     }
 
     // 동적 라우트 매칭
@@ -21,7 +24,7 @@ export const createRouter = () => {
       });
 
       const regex = new RegExp(`^${regexPath}$`);
-      const match = pathname.match(regex);
+      const match = cleanPathname.match(regex);
 
       if (match) {
         const params = {};
