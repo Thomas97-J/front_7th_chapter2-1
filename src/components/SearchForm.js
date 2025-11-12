@@ -6,12 +6,37 @@ export const CategoryLoading = `
 
 export const SearchForm = ({ categoriesLoading, filters = {}, categories = {} }) => {
   const { limit = 20, search = "", sort = "price_asc", category1 = "", category2 = "" } = filters;
-  console.log(categories);
+
   // 1depth 카테고리 목록
   const category1List = Object.keys(categories);
 
   // 선택된 1depth 카테고리의 2depth 목록
   const category2List = category1 && categories[category1] ? Object.keys(categories[category1]) : [];
+
+  // 브레드크럼 생성
+  const renderBreadcrumb = () => {
+    let breadcrumb = `
+      <button data-breadcrumb="reset" class="text-xs hover:text-blue-800 hover:underline">전체</button>
+    `;
+
+    if (category1) {
+      breadcrumb += `
+        <span class="text-xs text-gray-500">&gt;</span>
+        <button data-breadcrumb="category1" data-category1="${category1}" class="text-xs hover:text-blue-800 hover:underline">
+          ${category1}
+        </button>
+      `;
+    }
+
+    if (category2) {
+      breadcrumb += `
+        <span class="text-xs text-gray-500">&gt;</span>
+        <span class="text-xs text-gray-600 cursor-default">${category2}</span>
+      `;
+    }
+
+    return breadcrumb;
+  };
 
   return /* html */ `
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
@@ -41,31 +66,40 @@ export const SearchForm = ({ categoriesLoading, filters = {}, categories = {} })
         <div class="space-y-2">
           <div class="flex items-center gap-2">
             <label class="text-sm text-gray-600">카테고리:</label>
-              <button 
-                id="category-reset-btn" 
-                class="text-xs text-blue-600 hover:text-blue-800 hover:underline"
-              >
-                전체
-              </button>
-            ${
-              category1 || category2
-                ? `
-              <button 
-                id="category-reset-btn" 
-                class="text-xs text-blue-600 hover:text-blue-800 hover:underline"
-              >
-                전체
-              </button>
-            `
-                : ""
-            }
+            ${renderBreadcrumb()}
           </div>
-          
-          <!-- 1depth 카테고리 -->
+
           ${
             categoriesLoading
               ? CategoryLoading
-              : `
+              : category1 && category2List.length > 0
+                ? `
+            <!-- 2depth 카테고리 목록 -->
+            <div class="space-y-2">
+              <div class="flex flex-wrap gap-2">
+                ${category2List
+                  .map(
+                    (cat2) => `
+                  <button 
+                    data-category1="${category1}" 
+                    data-category2="${cat2}" 
+                    class="category2-filter-btn text-left px-3 py-2 text-sm rounded-md border transition-colors
+                      ${
+                        category2 === cat2
+                          ? "bg-blue-100 border-blue-300 text-blue-800"
+                          : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                      }"
+                  >
+                    ${cat2}
+                  </button>
+                `,
+                  )
+                  .join("")}
+              </div>
+            </div>
+          `
+                : `
+            <!-- 1depth 카테고리 목록 -->
             <div class="flex flex-wrap gap-2">
               ${category1List
                 .map(
@@ -87,35 +121,9 @@ export const SearchForm = ({ categoriesLoading, filters = {}, categories = {} })
             </div>
           `
           }
-
-          <!-- 2depth 카테고리 -->
-          ${
-            category1 && category2List.length > 0
-              ? `
-            <div class="flex flex-wrap gap-2 pl-4">
-              ${category2List
-                .map(
-                  (cat2) => `
-                <button 
-                  data-category2="${cat2}" 
-                  class="category2-btn text-left px-3 py-1.5 text-xs rounded-md border transition-colors
-                    ${
-                      category2 === cat2
-                        ? "bg-blue-500 border-blue-500 text-white"
-                        : "bg-white border-gray-300 text-gray-600 hover:bg-gray-50"
-                    }"
-                >
-                  ${cat2}
-                </button>
-              `,
-                )
-                .join("")}
-            </div>
-          `
-              : ""
-          }
         </div>
 
+        <!-- 기존 필터들 -->
         <div class="flex gap-2 items-center justify-between">
           <!-- 페이지당 상품 수 -->
           <div class="flex items-center gap-2">

@@ -89,7 +89,15 @@ export const createRouter = () => {
   };
 
   const pushWithQuery = (path, query = {}) => {
-    const queryString = new URLSearchParams(query).toString();
+    // 빈 문자열, null, undefined인 값 제거
+    const filteredQuery = Object.entries(query).reduce((acc, [key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    const queryString = new URLSearchParams(filteredQuery).toString();
     const fullPath = queryString ? `${path}?${queryString}` : path;
     push(fullPath);
   };

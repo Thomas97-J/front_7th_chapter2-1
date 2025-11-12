@@ -18,7 +18,7 @@ export const HomePage = () => {
   // 쿼리 파라미터
   const queryParams = router.getQueryParams();
   const filters = {
-    page: parseInt(queryParams.page) || 1,
+    current: parseInt(queryParams.current) || 1, // ✅ page → current
     limit: parseInt(queryParams.limit) || 20,
     search: queryParams.search || "",
     category1: queryParams.category1 || "",
@@ -26,56 +26,45 @@ export const HomePage = () => {
     sort: queryParams.sort || "price_asc",
   };
 
-  // ✅ useEffect: 필터 변경 시 데이터 로드
+  // ✅ useEffect: 필터 변경 시 상품 데이터 로드
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProducts = async () => {
       setLoading(true);
-      setCategoriesLoading(!categoriesFetched);
 
       try {
-        const promises = [getProducts(filters)];
-
-        if (!categoriesFetched) {
-          promises.push(getCategories());
-        }
-
-        const results = await Promise.all(promises);
-
-        setProducts(results[0].products);
-        setPagination(results[0].pagination);
+        const data = await getProducts(filters);
+        setProducts(data.products);
+        setPagination(data.pagination);
         setLoading(false);
-
-        if (!categoriesFetched) {
-          setCategories(results[1]);
-          setCategoriesLoading(false);
-          setCategoriesFetched(true);
-        }
       } catch (error) {
         console.error(error);
         setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [filters.current, filters.limit, filters.search, filters.category1, filters.category2, filters.sort]);
+
+  // ✅ useEffect: 카테고리 로드 (최초 한 번만)
+  useEffect(() => {
+    const fetchCategories = async () => {
+      if (categoriesFetched) return;
+
+      setCategoriesLoading(true);
+
+      try {
+        const data = await getCategories();
+        setCategories(data);
+        setCategoriesLoading(false);
+        setCategoriesFetched(true);
+      } catch (error) {
+        console.error(error);
         setCategoriesLoading(false);
       }
     };
 
-    fetchData();
-  }, [filters.page, filters.limit, filters.search, filters.category1, filters.category2, filters.sort]);
-
-  // ✅ useEffect: 컴포넌트 마운트 시 실행 (빈 의존성 배열)
-  useEffect(() => {
-    console.log("HomePage mounted");
-
-    // cleanup 함수 반환
-    return () => {
-      console.log("HomePage unmounted");
-    };
+    fetchCategories();
   }, []);
-
-  // ✅ useEffect: 특정 상태 변경 시 실행
-  useEffect(() => {
-    if (products.length > 0) {
-      console.log("Products loaded:", products.length);
-    }
-  }, [products.length]);
 
   return /* html */ `
     ${SearchForm({
