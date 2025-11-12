@@ -29,12 +29,11 @@ function showCartModal() {
   const modalHTML = CartModal({ cartItems, selectedItems });
 
   // 모달 컨테이너 생성 또는 가져오기
-  const $root = document.querySelector("#root");
   let modalContainer = document.getElementById("cart-modal-container");
   if (!modalContainer) {
     modalContainer = document.createElement("div");
     modalContainer.id = "cart-modal-container";
-    $root.appendChild(modalContainer);
+    document.body.appendChild(modalContainer);
   }
 
   modalContainer.innerHTML = modalHTML;
@@ -63,15 +62,13 @@ function rerenderCartModal() {
 
 // 이벤트 리스너
 const initEventListeners = () => {
-  const $root = document.querySelector("#root");
-
   // 장바구니 변경 구독
   subscribeCart(() => {
     rerenderCartModal();
     router.rerender(); // Header의 장바구니 개수 업데이트
   });
 
-  $root.addEventListener("click", (e) => {
+  document.body.addEventListener("click", (e) => {
     // 장바구니 아이콘 클릭
     if (e.target.closest("#cart-icon-btn")) {
       e.preventDefault();
@@ -335,7 +332,7 @@ const initEventListeners = () => {
     }
   });
 
-  $root.addEventListener("change", (e) => {
+  document.body.addEventListener("change", (e) => {
     // limit 변경
     if (e.target.closest("#limit-select")) {
       const limit = e.target.value;
@@ -360,7 +357,7 @@ const initEventListeners = () => {
   });
 
   // 검색어 입력 (엔터키)
-  $root.addEventListener("keypress", (e) => {
+  document.body.addEventListener("keypress", (e) => {
     if (e.target.closest("#search-input") && e.key === "Enter") {
       const search = e.target.value;
       const currentParams = router.getQueryParams();
