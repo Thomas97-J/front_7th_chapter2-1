@@ -1,4 +1,4 @@
-import { DetailPage } from "../pages/DetailPAge.js";
+import { DetailPage } from "../pages/DetailPage.js";
 import { HomePage } from "../pages/Homepage.js";
 
 export const setupRoutes = (router) => {
