@@ -1,5 +1,5 @@
 import { DetailPage } from "../pages/DetailPage.js";
-import { HomePage } from "../pages/Homepage.js";
+import { HomePage } from "../pages/HomePage.js";
 
 export const setupRoutes = (router) => {
   router.addRoute("/", async () => {
