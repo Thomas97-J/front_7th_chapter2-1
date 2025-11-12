@@ -250,6 +250,87 @@ const initEventListeners = () => {
         current: 1,
       });
     }
+
+    // 상세 페이지 - 수량 증가
+    if (e.target.closest("#quantity-increase")) {
+      const input = document.getElementById("quantity-input");
+      if (input) {
+        const currentValue = parseInt(input.value) || 1;
+        const max = parseInt(input.getAttribute("max")) || 999;
+        if (currentValue < max) {
+          input.value = currentValue + 1;
+        }
+      }
+      return;
+    }
+
+    // 상세 페이지 - 수량 감소
+    if (e.target.closest("#quantity-decrease")) {
+      const input = document.getElementById("quantity-input");
+      if (input) {
+        const currentValue = parseInt(input.value) || 1;
+        const min = parseInt(input.getAttribute("min")) || 1;
+        if (currentValue > min) {
+          input.value = currentValue - 1;
+        }
+      }
+      return;
+    }
+
+    // 상세 페이지 - 장바구니 담기
+    if (e.target.closest("#add-to-cart-btn")) {
+      const btn = e.target.closest("#add-to-cart-btn");
+      const productId = btn.dataset.productId;
+
+      // 상세 페이지에서 상품 정보 가져오기
+      const productTitle = document.querySelector("h1").textContent;
+      const productPrice = parseInt(
+        document.querySelector(".text-2xl.font-bold.text-blue-600").textContent.replace(/[^0-9]/g, ""),
+      );
+      const productImage = document.querySelector(".product-detail-image").src;
+      const quantity = parseInt(document.getElementById("quantity-input").value) || 1;
+
+      // 수량만큼 추가
+      for (let i = 0; i < quantity; i++) {
+        addToCart({
+          id: productId,
+          name: productTitle,
+          price: productPrice,
+          image: productImage,
+        });
+      }
+
+      showToast(`${quantity}개 상품이 장바구니에 추가되었습니다`, "success");
+      return;
+    }
+
+    // 상세 페이지 - 상품 목록으로 돌아가기
+    if (e.target.closest(".go-to-product-list")) {
+      router.push("/");
+      return;
+    }
+
+    // 상세 페이지 - 관련 상품 클릭
+    if (e.target.closest(".related-product-card")) {
+      const card = e.target.closest(".related-product-card");
+      const productId = card.dataset.productId;
+      router.push(`/products/${productId}`);
+      return;
+    }
+
+    // 상세 페이지 - 브레드크럼 카테고리 클릭
+    if (e.target.closest(".breadcrumb-link")) {
+      const link = e.target.closest(".breadcrumb-link");
+      const category1 = link.dataset.category1;
+      const category2 = link.dataset.category2;
+
+      if (category2) {
+        router.pushWithQuery("/", { category1, category2, current: 1 });
+      } else if (category1) {
+        router.pushWithQuery("/", { category1, current: 1 });
+      }
+      return;
+    }
   });
 
   document.body.addEventListener("change", (e) => {

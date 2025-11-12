@@ -49,7 +49,9 @@ export const createRouter = () => {
 
     try {
       const content = await match.handler(match.params);
-      $root.innerHTML = PageLayout({ children: content });
+      // 상세 페이지 경로인지 확인 (/products/:id)
+      const isDetailPage = pathname.split("?")[0].startsWith("/products/");
+      $root.innerHTML = PageLayout({ children: content, isDetailPage });
       currentRoute = pathname;
     } catch (error) {
       console.error("Render error:", error);
