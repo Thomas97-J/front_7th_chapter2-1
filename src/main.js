@@ -33,7 +33,6 @@ function showCartModal() {
   if (!modalContainer) {
     modalContainer = document.createElement("div");
     modalContainer.id = "cart-modal-container";
-    modalContainer.className = "fixed inset-0 bg-black bg-opacity-50 z-50";
     document.body.appendChild(modalContainer);
   }
 
