@@ -147,9 +147,13 @@ const initEventListeners = () => {
     }
 
     // 장바구니 담기 버튼
-    if (e.target.classList.contains("add-to-cart-btn")) {
-      const productId = e.target.dataset.productId;
-      const productCard = e.target.closest(".product-card");
+    if (e.target.closest(".add-to-cart-btn")) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const btn = e.target.closest(".add-to-cart-btn");
+      const productId = btn.dataset.productId;
+      const productCard = btn.closest(".product-card");
       const productName = productCard.querySelector("h3").textContent;
       const productPrice = parseInt(productCard.querySelector("p:last-of-type").textContent.replace(/[^0-9]/g, ""));
       const productImage = productCard.querySelector("img").src;
@@ -166,7 +170,7 @@ const initEventListeners = () => {
     }
 
     // 상품 카드 클릭 (장바구니 담기 버튼 제외)
-    if (e.target.closest(".product-card") && !e.target.classList.contains("add-to-cart-btn")) {
+    if (e.target.closest(".product-card") && !e.target.closest(".add-to-cart-btn")) {
       e.preventDefault();
       const productId = e.target.closest(".product-card").dataset.productId;
       router.push(`/products/${productId}`);

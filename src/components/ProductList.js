@@ -21,51 +21,6 @@ const Loading = `<div class="text-center py-4">
         </div>`;
 
 const ProductItem = ({ title, productId, image, lprice, brand }) => {
-  /*
-  brand
-: 
-""
-category1
-: 
-"생활/건강"
-category2
-: 
-"생활용품"
-category3
-: 
-"생활잡화"
-category4
-: 
-"쇼핑백"
-hprice
-: 
-""
-image
-: 
-"https://shopping-phinf.pstatic.net/main_8506721/85067212996.1.jpg"
-link
-: 
-"https://smartstore.naver.com/main/products/7522712674"
-lprice
-: 
-"220"
-maker
-: 
-""
-mallName
-: 
-"기브N기브"
-productId
-: 
-"85067212996"
-productType
-: 
-"2"
-title
-: 
-"PVC 투명 젤리 쇼핑백 1호 와인 답례품 구디백 비닐 손잡이 미니 간식 선물포장"
-
-  */
   return /* html */ `<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden product-card"
                data-product-id="${productId}">
             <!-- 상품 이미지 -->
@@ -88,7 +43,7 @@ title
               </div>
               <!-- 장바구니 버튼 -->
               <button class="w-full bg-blue-600 text-white text-sm py-2 px-3 rounded-md
-                     hover:bg-blue-700 transition-colors add-to-cart-btn" data-product-id="85067212996">
+                     hover:bg-blue-700 transition-colors add-to-cart-btn" data-product-id="${productId}">
                 장바구니 담기
               </button>
             </div>
