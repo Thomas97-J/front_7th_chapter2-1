@@ -282,7 +282,7 @@
         </div>
         <!-- 상품 정보 -->
         <div>
-          <p class="text-sm text-gray-600 mb-1"></p>
+          <p class="text-sm text-gray-600 mb-1">${t.brand}</p>
           <h1 class="text-xl font-bold text-gray-900 mb-3">${t.title}</h1>
           <!-- 평점 및 리뷰 -->
           <div class="flex items-center mb-3">
@@ -515,7 +515,7 @@
                 장바구니 담기
               </button>
             </div>
-          </div>`,ye=({loading:e,products:t,pagination:n,isLoadingMore:r})=>{let i=n.current<n.totalPages;return`<div class="mb-6">
+          </div>`,ye=({loading:e,products:t,pagination:n,isLoadingMore:r})=>{let i=n.hasNext;return`<div class="mb-6">
       <div>
         ${n.total?`<div class="mb-4 text-sm text-gray-600">
                 총 <span class="font-medium text-gray-900">${n.total}개</span>의 상품
@@ -536,18 +536,18 @@
           <!-- 추가 로딩 표시 -->
          ${J}
           `:``}
-      
+      ${i?`
         <!-- Intersection Observer 센티널 -->
         <div id="infinite-scroll-trigger" class="h-20 flex items-center justify-center">
           <div class="text-sm text-gray-400">스크롤하여 더 보기...</div>
         </div>
-        
+        `:``}
       ${!e&&!r&&!i&&t.length>0?`
         <div class="text-center py-8 text-sm text-gray-500">
           모든 상품을 불러왔습니다.
         </div>
         `:``}
-    </div>`},be=()=>{K(`HomePage`);let[e,t]=W([]),[n,r]=W({}),[i,a]=W([]),[o,s]=W(!0),[c,l]=W(!0),[u,d]=W(!1),[f,p]=W(!1),m=Y.getQueryParams(),h={current:parseInt(m.current)||1,limit:parseInt(m.limit)||20,search:m.search||``,category1:m.category1||``,category2:m.category2||``,sort:m.sort||`price_asc`};return G(()=>{let e=async()=>{s(!0);try{let e=await F(h);t(e.products),r(e.pagination),s(!1)}catch(e){console.error(e),s(!1)}};e()},[h.limit,h.search,h.category1,h.category2,h.sort]),G(()=>{let e=async()=>{if(!u){l(!0);try{let e=await L();a(e),l(!1),d(!0)}catch(e){console.error(e),l(!1)}}};e()},[]),G(()=>{if(console.log(`Effect!`),o||f)return;console.log(`1`);let e=n.page<n.total;if(console.log(`hasMore`,e,n),!e)return;console.log(`2`);let i=()=>{let e=document.querySelector(`#infinite-scroll-trigger`);if(!e)return console.log(`Sentinel not found, retrying...`),null;let i=async e=>{let[i]=e;if(i.isIntersecting&&!f){console.log(`Loading more products...`),p(!0);try{let e=n.current+1;console.log(`Next page:`,e);let i=await F({...h,current:e});console.log(`Loaded products:`,i.products.length),t(e=>[...e,...i.products]),r(i.pagination)}catch(e){console.error(`Failed to load more products:`,e)}finally{p(!1)}}},a=new IntersectionObserver(i,{root:null,rootMargin:`100px`,threshold:.1});return a.observe(e),console.log(`Observer setup complete`),a};console.log(`3`);let a=setTimeout(()=>{let e=i();if(console.log(`4`),e)return console.log(`5`),()=>{let t=document.querySelector(`#infinite-scroll-trigger`);t&&e.unobserve(t),e.disconnect(),console.log(`Observer cleaned up`)}},100);return()=>{clearTimeout(a)}},[o,f,n.page,n.total,e.length]),`
+    </div>`},be=()=>{K(`HomePage`);let[e,t]=W([]),[n,r]=W({}),[i,a]=W([]),[o,s]=W(!0),[c,l]=W(!0),[u,d]=W(!1),[f,p]=W(!1),m=Y.getQueryParams(),h={current:1,limit:parseInt(m.limit)||20,search:m.search||``,category1:m.category1||``,category2:m.category2||``,sort:m.sort||`price_asc`};return G(()=>{let e=async()=>{s(!0);try{let e=await F(h);t(e.products),r(e.pagination),s(!1);let n=new URLSearchParams(window.location.search);if(n.has(`current`)){n.delete(`current`);let e=n.toString()?`${window.location.pathname}?${n.toString()}`:window.location.pathname;window.history.replaceState({},``,e)}}catch(e){console.error(e),s(!1)}};e()},[h.limit,h.search,h.category1,h.category2,h.sort]),G(()=>{let e=async()=>{if(!u){l(!0);try{let e=await L();a(e),l(!1),d(!0)}catch(e){console.error(e),l(!1)}}};e()},[]),G(()=>{if(console.log(`pagination!`,n),o||f)return;let e=n.hasNext;if(!e)return;let i=()=>{let e=document.querySelector(`#infinite-scroll-trigger`);if(!e)return console.log(`Sentinel not found, retrying...`),null;let i=async e=>{let[i]=e;if(i.isIntersecting&&!f){console.log(`Loading more products...`),p(!0);try{let e=n.page+1;console.log(`Next page:`,e,n.page);let i=await F({...h,current:e});console.log(`Pagination data:`,i.pagination),console.log(`Loaded products:`,i.products.length),t(e=>[...e,...i.products]),r(i.pagination),console.log(window.location);let a=new URLSearchParams(window.location.search);a.set(`current`,e),window.history.replaceState({},``,`${window.location.pathname}?${a.toString()}`)}catch(e){console.error(`Failed to load more products:`,e)}finally{p(!1)}}},a=new IntersectionObserver(i,{root:null,rootMargin:`100px`,threshold:.1});return a.observe(e),console.log(`Observer setup complete`),a},a=setTimeout(()=>{let e=i();if(e)return()=>{let t=document.querySelector(`#infinite-scroll-trigger`);t&&e.unobserve(t),e.disconnect(),console.log(`Observer cleaned up`)}},100);return()=>{clearTimeout(a)}},[o,f,n.page,n.total,e.length]),`
   ${ge({categoriesLoading:c,categories:i,filters:h,pagination:n})}
   ${ye({loading:o,products:e,pagination:n,isLoadingMore:f})}
 `},xe=e=>(e.addRoute(`/`,async()=>be()),e.addRoute(`/product/:id`,async e=>me(e)),e),Y=P();xe(Y);const X={success:`
