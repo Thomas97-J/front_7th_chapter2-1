@@ -49,8 +49,8 @@ export const createRouter = () => {
 
     try {
       const content = await match.handler(match.params);
-      // 상세 페이지 경로인지 확인 (/products/:id)
-      const isDetailPage = pathname.split("?")[0].startsWith("/products/");
+      // 상세 페이지 경로인지 확인 (/product/:id)
+      const isDetailPage = pathname.split("?")[0].startsWith("/product/");
       $root.innerHTML = PageLayout({ children: content, isDetailPage });
       currentRoute = pathname;
     } catch (error) {

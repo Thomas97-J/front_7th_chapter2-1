@@ -5,7 +5,7 @@ export const setupRoutes = (router) => {
   router.addRoute("/", async () => {
     return HomePage();
   });
-  router.addRoute("/products/:id", async (params) => {
+  router.addRoute("/product/:id", async (params) => {
     return DetailPage(params);
   });
 

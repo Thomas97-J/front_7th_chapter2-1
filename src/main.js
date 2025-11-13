@@ -139,7 +139,7 @@ const initEventListeners = () => {
     if (e.target.closest(".product-card") && !e.target.closest(".add-to-cart-btn")) {
       e.preventDefault();
       const productId = e.target.closest(".product-card").dataset.productId;
-      router.push(`/products/${productId}`);
+      router.push(`/product/${productId}`);
       return;
     }
 
@@ -280,7 +280,7 @@ const initEventListeners = () => {
     if (e.target.closest(".related-product-card")) {
       const card = e.target.closest(".related-product-card");
       const productId = card.dataset.productId;
-      router.push(`/products/${productId}`);
+      router.push(`/product/${productId}`);
       return;
     }
 
