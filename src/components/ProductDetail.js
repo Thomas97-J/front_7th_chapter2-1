@@ -1,4 +1,4 @@
-export const ProductDetail = ({ loading, product, relatedProducts = [], relatedLoading = false }) => {
+export const ProductDetail = ({ loading, product, relatedProducts = [] }) => {
   console.log("product", product);
 
   //   {
@@ -153,30 +153,25 @@ export const ProductDetail = ({ loading, product, relatedProducts = [], relatedL
       </div>
       <div class="p-4">
         ${
-          relatedLoading
-            ? `<div class="flex items-center justify-center py-8">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span class="ml-2 text-gray-600">관련 상품을 불러오는 중...</span>
-          </div>`
-            : relatedProducts.length > 0
-              ? `<div class="grid grid-cols-2 gap-3 responsive-grid">
-              ${relatedProducts
-                .map(
-                  (relatedProduct) => `
-                <div class="bg-gray-50 rounded-lg p-3 related-product-card cursor-pointer" data-product-id="${relatedProduct.productId}">
-                  <div class="aspect-square bg-white rounded-md overflow-hidden mb-2">
-                    <img src="${relatedProduct.image}" alt="${relatedProduct.title}" class="w-full h-full object-cover" loading="lazy">
-                  </div>
-                  <h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">${relatedProduct.title}</h3>
-                  <p class="text-sm font-bold text-blue-600">${Number(relatedProduct.lprice).toLocaleString()}원</p>
+          relatedProducts.length > 0
+            ? `<div class="grid grid-cols-2 gap-3 responsive-grid">
+            ${relatedProducts
+              .map(
+                (relatedProduct) => `
+              <div class="bg-gray-50 rounded-lg p-3 related-product-card cursor-pointer" data-product-id="${relatedProduct.productId}">
+                <div class="aspect-square bg-white rounded-md overflow-hidden mb-2">
+                  <img src="${relatedProduct.image}" alt="${relatedProduct.title}" class="w-full h-full object-cover" loading="lazy">
                 </div>
-              `,
-                )
-                .join("")}
-            </div>`
-              : `<div class="text-center py-8 text-gray-500">
-              같은 카테고리의 다른 상품이 없습니다.
-            </div>`
+                <h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">${relatedProduct.title}</h3>
+                <p class="text-sm font-bold text-blue-600">${Number(relatedProduct.lprice).toLocaleString()}원</p>
+              </div>
+            `,
+              )
+              .join("")}
+          </div>`
+            : `<div class="text-center py-8 text-gray-500">
+            같은 카테고리의 다른 상품이 없습니다.
+          </div>`
         }
       </div>
     </div>`;

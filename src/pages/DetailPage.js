@@ -10,7 +10,6 @@ export const DetailPage = (params) => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [relatedLoading, setRelatedLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -34,8 +33,6 @@ export const DetailPage = (params) => {
     if (!product) return;
 
     const fetchRelatedProducts = async () => {
-      setRelatedLoading(true);
-
       try {
         const data = await getProducts({
           limit: 10,
@@ -47,15 +44,13 @@ export const DetailPage = (params) => {
         const filtered = data.products.filter((p) => p.productId !== product.productId).slice(0, 2);
 
         setRelatedProducts(filtered);
-        setRelatedLoading(false);
       } catch (error) {
         console.error(error);
-        setRelatedLoading(false);
       }
     };
 
     fetchRelatedProducts();
   }, [product]);
 
-  return ProductDetail({ loading, product, relatedProducts, relatedLoading });
+  return ProductDetail({ loading, product, relatedProducts });
 };
