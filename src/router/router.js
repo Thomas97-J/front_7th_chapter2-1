@@ -1,14 +1,36 @@
 import { _404 } from "../pages/404";
 import { PageLayout } from "../pages/PageLayout";
 
+// 환경에 따라 BASE_PATH 설정
+const BASE_PATH = import.meta.env.MODE === "production" ? "/front_7th_chapter2-1" : "";
+
+// 베이스 경로를 제거한 pathname 반환
+const getPathWithoutBase = (pathname) => {
+  if (BASE_PATH && pathname.startsWith(BASE_PATH)) {
+    return pathname.slice(BASE_PATH.length) || "/";
+  }
+  return pathname;
+};
+
+// 베이스 경로를 포함한 전체 경로 반환
+const getFullPath = (pathname) => {
+  if (BASE_PATH && pathname.startsWith(BASE_PATH)) {
+    return pathname;
+  }
+  return BASE_PATH + pathname;
+};
+
 export const createRouter = () => {
   const routes = new Map();
   let currentRoute = null;
 
   // 라우트 매칭
   const matchRoute = (pathname) => {
+    // 베이스 경로 제거
+    const pathWithoutBase = getPathWithoutBase(pathname);
+
     // 쿼리 파라미터 제거 (pathname만 사용)
-    const cleanPathname = pathname.split("?")[0];
+    const cleanPathname = pathWithoutBase.split("?")[0];
 
     // 정확히 일치하는 라우트
     if (routes.has(cleanPathname)) {
@@ -50,7 +72,8 @@ export const createRouter = () => {
     try {
       const content = await match.handler(match.params);
       // 상세 페이지 경로인지 확인 (/product/:id)
-      const isDetailPage = pathname.split("?")[0].startsWith("/product/");
+      const pathWithoutBase = getPathWithoutBase(pathname);
+      const isDetailPage = pathWithoutBase.split("?")[0].startsWith("/product/");
       $root.innerHTML = PageLayout({ children: content, isDetailPage });
       currentRoute = pathname;
     } catch (error) {
@@ -58,9 +81,11 @@ export const createRouter = () => {
       $root.innerHTML = PageLayout({ children: "<h1>Error occurred</h1>" });
     }
   };
+
   const rerender = () => {
     return render(window.location.pathname);
   };
+
   // 라우트 등록
   const addRoute = (path, handler) => {
     routes.set(path, handler);
@@ -69,14 +94,16 @@ export const createRouter = () => {
 
   // 경로 이동
   const push = (path) => {
-    window.history.pushState(null, null, path);
-    render(path);
+    const fullPath = getFullPath(path);
+    window.history.pushState(null, null, fullPath);
+    render(fullPath);
   };
 
   // 경로 교체
   const replace = (path) => {
-    window.history.replaceState(null, null, path);
-    render(path);
+    const fullPath = getFullPath(path);
+    window.history.replaceState(null, null, fullPath);
+    render(fullPath);
   };
 
   // 뒤로가기

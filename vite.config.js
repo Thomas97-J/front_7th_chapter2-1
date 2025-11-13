@@ -1,6 +1,6 @@
 import { defineConfig } from "vitest/config";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   test: {
     globals: true,
     environment: "jsdom",
@@ -12,4 +12,5 @@ export default defineConfig({
       },
     },
   },
-});
+  base: mode === "production" ? "/front_7th_chapter2-1/" : "/",
+}));
