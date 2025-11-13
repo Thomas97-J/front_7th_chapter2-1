@@ -87,7 +87,7 @@ export const ProductDetail = ({ loading, product, relatedProducts = [] }) => {
         </div>
         <!-- 상품 정보 -->
         <div>
-          <p class="text-sm text-gray-600 mb-1"></p>
+          <p class="text-sm text-gray-600 mb-1">${product.brand}</p>
           <h1 class="text-xl font-bold text-gray-900 mb-3">${product.title}</h1>
           <!-- 평점 및 리뷰 -->
           <div class="flex items-center mb-3">
