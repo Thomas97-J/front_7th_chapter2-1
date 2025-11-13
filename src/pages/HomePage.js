@@ -19,7 +19,7 @@ export const HomePage = () => {
   // 쿼리 파라미터
   const queryParams = router.getQueryParams();
   const filters = {
-    current: parseInt(queryParams.current) || 1,
+    current: 1, //항상 1부터 시작하도록 변경
     limit: parseInt(queryParams.limit) || 20,
     search: queryParams.search || "",
     category1: queryParams.category1 || "",
@@ -37,6 +37,15 @@ export const HomePage = () => {
         setProducts(data.products);
         setPagination(data.pagination);
         setLoading(false);
+        // 필터 변경 시 URL에서 current 파라미터 제거
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has("current")) {
+          searchParams.delete("current");
+          const newUrl = searchParams.toString()
+            ? `${window.location.pathname}?${searchParams.toString()}`
+            : window.location.pathname;
+          window.history.replaceState({}, "", newUrl);
+        }
       } catch (error) {
         console.error(error);
         setLoading(false);
@@ -46,7 +55,6 @@ export const HomePage = () => {
     fetchProducts();
   }, [filters.limit, filters.search, filters.category1, filters.category2, filters.sort]);
 
-  // ✅ useEffect: 카테고리 로드 (최초 한 번만)
   useEffect(() => {
     const fetchCategories = async () => {
       if (categoriesFetched) return;
@@ -95,18 +103,25 @@ export const HomePage = () => {
           setIsLoadingMore(true);
 
           try {
-            const nextPage = pagination.current + 1;
-            console.log("Next page:", nextPage);
+            const nextPage = pagination.page + 1;
+            console.log("Next page:", nextPage, pagination.page);
             const data = await getProducts({
               ...filters,
               current: nextPage,
             });
+            console.log("Pagination data:", data.pagination); // 디버깅용
 
             console.log("Loaded products:", data.products.length);
 
             // 기존 상품에 새 상품 추가
             setProducts((prevProducts) => [...prevProducts, ...data.products]);
             setPagination(data.pagination);
+
+            console.log(window.location);
+            // URL 쿼리 파라미터 업데이트
+            const searchParams = new URLSearchParams(window.location.search);
+            searchParams.set("current", nextPage);
+            window.history.replaceState({}, "", `${window.location.pathname}?${searchParams.toString()}`);
           } catch (error) {
             console.error("Failed to load more products:", error);
           } finally {
