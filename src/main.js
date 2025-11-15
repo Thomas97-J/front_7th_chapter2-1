@@ -17,9 +17,11 @@ const enableMocking = () =>
   import("./mocks/browser.js").then(({ worker }) =>
     worker.start({
       onUnhandledRequest: "bypass",
+      serviceWorker: {
+        url: import.meta.env.BASE_URL + "mockServiceWorker.js",
+      },
     }),
   );
-
 // 이벤트 리스너
 const initEventListeners = () => {
   const $root = document.querySelector("#root");
